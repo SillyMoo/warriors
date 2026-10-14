@@ -6,32 +6,13 @@ const { compileThroughTheHands, compileDefenseDrill } = require('./src/compiler'
 
 console.log('=== Building Warriors Coaching Playbook ===\n');
 
-// 1. Dynamic Scanner: loads all *.yaml drills from content/attack and content/defense
-function loadDrills(dirPath, categoryDefault) {
-  if (!fs.existsSync(dirPath)) return [];
-  const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
-  return files.map(file => {
-    const fullPath = path.join(dirPath, file);
-    const doc = yaml.load(fs.readFileSync(fullPath, 'utf8'));
-    console.log(`[PASS] Loaded drill: "${doc.name}" from ${path.relative(__dirname, fullPath)}`);
-    if (doc.tiers) {
-      const compiled = compileThroughTheHands(doc);
-      return {
-        id: doc.id,
-        name: doc.name,
-        category: doc.category || categoryDefault,
-        summary: doc.summary,
-        tiers: compiled.tiers,
-        standards: compiled.standards
-      };
-    } else {
-      return compileDefenseDrill(doc);
-    }
-  });
-}
+// 1. Dynamic Scanner: loads all *.yaml drills via src/drills
+const { attackDrills, defenseDrills, drillsCatalog } = require('./src/drills');
 
-const attackDrills = loadDrills(path.resolve(__dirname, 'content/attack'), 'attack');
-const defenseDrills = loadDrills(path.resolve(__dirname, 'content/defense'), 'defense');
+console.log(`[PASS] Loaded ${attackDrills.length} attack drills from content/attack`);
+attackDrills.forEach(d => console.log(`  - "${d.name}" (${d.id})`));
+console.log(`[PASS] Loaded ${defenseDrills.length} defense drills from content/defense`);
+defenseDrills.forEach(d => console.log(`  - "${d.name}" (${d.id})`));
 
 if (attackDrills.length === 0) {
   console.error('ERROR: No attack drills found in content/attack');
@@ -41,11 +22,6 @@ if (defenseDrills.length === 0) {
   console.error('ERROR: No defense drills found in content/defense');
   process.exit(1);
 }
-
-const drillsCatalog = {
-  attack: attackDrills,
-  defense: defenseDrills
-};
 
 // 2. Assemble Data Declarations
 const primaryAttack = attackDrills[0];
