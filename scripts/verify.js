@@ -62,7 +62,7 @@ try {
   process.exit(1);
 }
 
-// 5. Test DOM mounting and interactive tab behaviors
+// 5. Test DOM mounting and interactive behaviors
 setTimeout(() => {
   const root = window.document.getElementById('root');
   if (!root || root.innerHTML.length === 0) {
@@ -176,8 +176,40 @@ setTimeout(() => {
       }
       console.log('[PASS] Gold tab isolates Gold standard text exclusively');
 
-      console.log('\n=== ALL VERIFICATION CHECKS PASSED SUCCESSFULLY (100%) ===');
-      process.exit(0);
+      // --- Step D: Test Generic DrillView with Defense Category ---
+      const navButtons = Array.from(window.document.querySelectorAll('nav [role="tab"]'));
+      const defenseNav = navButtons.find(b => b.textContent.includes('Defense'));
+      if (!defenseNav) {
+        console.error('[FAIL] Could not find Defense navigation tab in header');
+        process.exit(1);
+      }
+      defenseNav.click();
+
+      setTimeout(() => {
+        if (!root.textContent.includes('Basic Drift & Fold')) {
+          console.error('[FAIL] Defense drill Basic Drift & Fold not rendered after clicking Defense tab');
+          process.exit(1);
+        }
+        console.log('[PASS] Generic DrillView successfully rendered Defense drill (Basic Drift & Fold)');
+
+        if (!root.textContent.includes('PAD LINE')) {
+          console.error('[FAIL] Defense drill lines missing on pitch board');
+          process.exit(1);
+        }
+        console.log('[PASS] Defense pitch board rendered with pads and contact zones');
+
+        // Check that tier tabs are absent on single-tier drill
+        const activeTierTabs = Array.from(window.document.querySelectorAll('[role="tab"]'))
+          .filter(t => ['bronze', 'silver', 'gold'].includes(t.textContent.trim().toLowerCase()));
+        if (activeTierTabs.length !== 0) {
+          console.error('[FAIL] Tier tabs should not appear on single-tier drills');
+          process.exit(1);
+        }
+        console.log('[PASS] Generic DrillView correctly hides tier tabs on single-tier drills');
+
+        console.log('\n=== ALL VERIFICATION CHECKS PASSED SUCCESSFULLY (100%) ===');
+        process.exit(0);
+      }, 80);
     }, 80);
   }, 80);
 }, 100);

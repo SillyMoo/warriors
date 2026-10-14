@@ -211,12 +211,30 @@ function compileThroughTheHands(doc) {
       // Title
       let t = step.title;
       if (!t) {
+        const ordinal = (n) => {
+          const s = ['th', 'st', 'nd', 'rd'];
+          const v = n % 100;
+          return n + (s[(v - 20) % 10] || s[v] || s[0]);
+        };
+        const passOrd = ordinal(idx);
+        const formatParticipant = (code) => {
+          if (!code) return '';
+          const laneMatch = code.match(/^([A-Za-z]+)(\d*)$/);
+          if (laneMatch) {
+            const laneId = laneMatch[1];
+            const num = laneMatch[2];
+            const laneObj = lanesWithX.find(l => l.id === laneId);
+            const laneName = laneObj ? laneObj.name : laneId;
+            return num ? `${ordinal(parseInt(num, 10))} ${laneName}` : laneName;
+          }
+          return code;
+        };
         if (step.action === 'start') {
           t = `Step 1: 1st ${lanesWithX[0].name} Runner Sets Off`;
         } else if (step.action === 'hook') {
-          t = `Step ${idx + 1}: ${idx}th Pass — ${step.from} → ${step.to} (Hook${idx === tier.flow.length - 1 ? ' - Continuous Loop' : ''})`;
+          t = `Step ${idx + 1}: ${passOrd} Pass — ${formatParticipant(step.from)} → ${formatParticipant(step.to)} (Hook${idx === tier.flow.length - 1 ? ' - Continuous Loop' : ''})`;
         } else {
-          t = `Step ${idx + 1}: ${idx}th Pass — ${step.from} → ${step.to}`;
+          t = `Step ${idx + 1}: ${passOrd} Pass — ${formatParticipant(step.from)} → ${formatParticipant(step.to)}`;
         }
       }
 
@@ -261,34 +279,253 @@ function compileThroughTheHands(doc) {
 }
 
 function compileDefenseDrill(doc) {
+  const spacing = doc.spacing || 12;
+  const startX = doc.startX || 16;
+
+  // Contact lanes & fold lanes
+  const rawContact = doc.contact_lanes || doc.lanes || [];
+  const contactLanes = rawContact.map((l, idx) => ({
+    ...l,
+    x: l.x !== undefined ? l.x : (startX + idx * spacing)
+  }));
+
+  const rawFold = doc.fold_lanes || [];
+  const foldLanes = rawFold.map((l, idx) => ({
+    ...l,
+    x: l.x !== undefined ? l.x : (startX + (contactLanes.length + idx) * spacing)
+  }));
+
+  // Lines
+  let lines = doc.lines;
+  if (!Array.isArray(lines)) {
+    const padLineConf = doc.lines?.pad_line || doc.lines?.contact || "PAD LINE (CONTACT ZONE)";
+    const startLineConf = doc.lines?.start_line || doc.lines?.start || "DEFENSIVE START LINE";
+    lines = [
+      {
+        y: 18,
+        label: typeof padLineConf === 'string' ? padLineConf : (padLineConf.label || "PAD LINE (CONTACT ZONE)"),
+        kind: 'gain',
+        end: true
+      },
+      {
+        y: 42,
+        label: typeof startLineConf === 'string' ? startLineConf : (startLineConf.label || "DEFENSIVE START LINE"),
+        kind: 'solid'
+      }
+    ];
+  }
+
+  // Cones
+  let cones = doc.cones;
+  if (!Array.isArray(cones)) {
+    cones = [];
+    contactLanes.forEach((l, idx) => {
+      const padColor = l.cones?.pad || l.pad || 'orange';
+      const startColor = l.cones?.start || l.start || 'orange';
+      cones.push({ x: l.x, y: 18, color: padColor, label: `Pad ${idx + 1}` });
+      cones.push({ x: l.x, y: 42, color: startColor, label: `Start ${idx + 1}` });
+    });
+    foldLanes.forEach((l, idx) => {
+      const foldColor = l.cones?.fold || l.cones?.line || l.cone || 'yellow';
+      cones.push({ x: l.x, y: 42, color: foldColor, label: `Fold ${idx + 1}` });
+    });
+  }
+
+  // Players
+  let players = doc.players;
+  if (!Array.isArray(players)) {
+    players = [];
+    // Pad holders
+    contactLanes.forEach((l, idx) => {
+      players.push({
+        id: `pad${idx + 1}`,
+        team: 'o',
+        label: `Pad Holder ${l.name}`
+      });
+    });
+
+    // Defender sets
+    const sets = doc.squads?.defenders?.sets || doc.defenders?.sets || doc.squads?.sets || [
+      { id: 'set1', name: '1st Set' },
+      { id: 'set2', name: '2nd Set' },
+      { id: 'set3', name: '3rd Set' }
+    ];
+
+    sets.forEach((s, sIdx) => {
+      const team = sIdx === 0 ? 'w' : (sIdx === 1 ? 'next' : 'queue');
+      contactLanes.forEach((l, lIdx) => {
+        players.push({
+          id: `s${sIdx + 1}_${lIdx + 1}`,
+          team,
+          label: `${s.name || s.label || `Set ${sIdx + 1}`} - ${l.name}`
+        });
+      });
+    });
+  }
+
+  // View
+  const view = doc.view || [4, 4, 84, 56];
+
+  // Helper to map friendly player name / id to internal id
+  const playerNameToId = {};
+  players.forEach(p => {
+    playerNameToId[p.id.toLowerCase()] = p.id;
+    playerNameToId[p.label.toLowerCase()] = p.id;
+  });
+  playerNameToId['set1_middle'] = 's1_2';
+  playerNameToId['set1.middle'] = 's1_2';
+  playerNameToId['set2_middle'] = 's2_2';
+  playerNameToId['set2.middle'] = 's2_2';
+  playerNameToId['set3_middle'] = 's3_2';
+  playerNameToId['set3.middle'] = 's3_2';
+
+  const resolvePlayerId = (who) => {
+    if (!who) return who;
+    return playerNameToId[who.toLowerCase()] || who;
+  };
+
+  // Helper to get positions for a set given a state
+  const getSetCoords = (sIdx, state) => {
+    const coords = {};
+    const pPrefix = `s${sIdx + 1}`;
+    switch (state) {
+      case 'line':
+      case 'start_line':
+      case 'on_line':
+        contactLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 42];
+        });
+        break;
+      case 'hit_pads':
+      case 'contact':
+        contactLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 20];
+        });
+        break;
+      case 'hold_pads':
+        contactLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 19];
+        });
+        break;
+      case 'row2':
+      case 'row_2':
+      case 'queue_front':
+        contactLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 48];
+        });
+        break;
+      case 'row3':
+      case 'row_3':
+      case 'queue_back':
+        contactLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 54];
+        });
+        break;
+      case 'fold':
+      case 'folded':
+      case 'fold_line':
+        foldLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 42];
+        });
+        break;
+      case 'fold_advance':
+      case 'line_speed':
+        foldLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 22];
+        });
+        break;
+      case 'creep':
+      case 'ready':
+      case 'edge':
+        contactLanes.forEach((l, lIdx) => {
+          coords[`${pPrefix}_${lIdx + 1}`] = [l.x, 44];
+        });
+        break;
+      default:
+        break;
+    }
+    return coords;
+  };
+
+  // Build steps
+  const rawSteps = doc.flow || doc.steps || [];
+  const compiledSteps = rawSteps.map(s => {
+    const t = s.title || s.t;
+    const d = s.desc || s.d;
+    const ball = s.ball || "";
+    const dur = s.dur || 1100;
+    const focusTip = s.tip || s.focus_tip || s.focusTip;
+
+    let shouts = [];
+    if (s.call) {
+      shouts = [{ who: resolvePlayerId(s.call.who), text: s.call.text }];
+    } else if (s.shouts) {
+      shouts = s.shouts.map(sh => ({ who: resolvePlayerId(sh.who), text: sh.text }));
+    }
+
+    let pos = {};
+    if (s.pos) {
+      pos = { ...s.pos };
+    } else {
+      contactLanes.forEach((l, idx) => {
+        pos[`pad${idx + 1}`] = [l.x, 18];
+      });
+
+      if (s.positions) {
+        Object.entries(s.positions).forEach(([setName, state]) => {
+          let sIdx = -1;
+          if (setName === 'set1' || setName === '1st Set') sIdx = 0;
+          else if (setName === 'set2' || setName === '2nd Set') sIdx = 1;
+          else if (setName === 'set3' || setName === '3rd Set') sIdx = 2;
+          else {
+            const m = setName.match(/(\d+)/);
+            if (m) sIdx = parseInt(m[1], 10) - 1;
+          }
+
+          if (sIdx >= 0) {
+            const setCoords = getSetCoords(sIdx, state);
+            Object.assign(pos, setCoords);
+          }
+        });
+      }
+
+      if (s.pos_override) {
+        Object.assign(pos, s.pos_override);
+      }
+    }
+
+    return {
+      t,
+      d,
+      ball,
+      dur,
+      shouts,
+      focusTip,
+      pos
+    };
+  });
+
   return {
     id: doc.id,
     name: doc.name,
     subtitle: doc.subtitle,
     category: doc.category,
-    view: doc.view,
+    view,
     gridDimensions: doc.grid_description,
     recommendedPlayers: doc.recommended_players,
     equipment: doc.equipment,
-    lines: doc.lines,
-    cones: doc.cones,
-    players: doc.players,
+    lines,
+    cones,
+    players,
     variations: [{
       id: `${doc.id}-sequence`,
       label: doc.name,
       description: doc.subtitle,
-      steps: doc.steps.map(s => ({
-        t: s.t,
-        d: s.d,
-        ball: s.ball,
-        dur: s.dur,
-        shouts: s.shouts,
-        focusTip: s.focus_tip,
-        pos: s.pos
-      }))
+      steps: compiledSteps
     }],
-    remember: doc.remember,
-    coachQuestions: doc.coach_questions
+    cues: doc.cues || [],
+    remember: doc.remember || [],
+    coachQuestions: doc.coach_questions || []
   };
 }
 

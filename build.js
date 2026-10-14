@@ -6,35 +6,56 @@ const { compileThroughTheHands, compileDefenseDrill } = require('./src/compiler'
 
 console.log('=== Building Warriors Coaching Playbook ===\n');
 
-// 1. Load and compile YAML content
-const attackYamlPath = path.resolve(__dirname, 'content/attack/through-the-hands.yaml');
-const defenseYamlPath = path.resolve(__dirname, 'content/defense/basic-drift.yaml');
+// 1. Dynamic Scanner: loads all *.yaml drills from content/attack and content/defense
+function loadDrills(dirPath, categoryDefault) {
+  if (!fs.existsSync(dirPath)) return [];
+  const files = fs.readdirSync(dirPath).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+  return files.map(file => {
+    const fullPath = path.join(dirPath, file);
+    const doc = yaml.load(fs.readFileSync(fullPath, 'utf8'));
+    console.log(`[PASS] Loaded drill: "${doc.name}" from ${path.relative(__dirname, fullPath)}`);
+    if (doc.tiers) {
+      const compiled = compileThroughTheHands(doc);
+      return {
+        id: doc.id,
+        name: doc.name,
+        category: doc.category || categoryDefault,
+        summary: doc.summary,
+        tiers: compiled.tiers,
+        standards: compiled.standards
+      };
+    } else {
+      return compileDefenseDrill(doc);
+    }
+  });
+}
 
-if (!fs.existsSync(attackYamlPath)) {
-  console.error(`ERROR: Missing ${attackYamlPath}`);
+const attackDrills = loadDrills(path.resolve(__dirname, 'content/attack'), 'attack');
+const defenseDrills = loadDrills(path.resolve(__dirname, 'content/defense'), 'defense');
+
+if (attackDrills.length === 0) {
+  console.error('ERROR: No attack drills found in content/attack');
   process.exit(1);
 }
-if (!fs.existsSync(defenseYamlPath)) {
-  console.error(`ERROR: Missing ${defenseYamlPath}`);
+if (defenseDrills.length === 0) {
+  console.error('ERROR: No defense drills found in content/defense');
   process.exit(1);
 }
 
-const attackDoc = yaml.load(fs.readFileSync(attackYamlPath, 'utf8'));
-const defenseDoc = yaml.load(fs.readFileSync(defenseYamlPath, 'utf8'));
-
-console.log(`[PASS] Loaded YAML content: "${attackDoc.name}" & "${defenseDoc.name}"`);
-
-const attackCompiled = compileThroughTheHands(attackDoc);
-const defenseCompiled = compileDefenseDrill(defenseDoc);
-
-console.log(`[PASS] Compiled declarative drills (Bronze: 3 lanes, Silver: 4 lanes, Gold: 3 lanes)`);
+const drillsCatalog = {
+  attack: attackDrills,
+  defense: defenseDrills
+};
 
 // 2. Assemble Data Declarations
+const primaryAttack = attackDrills[0];
+const primaryDefense = defenseDrills[0];
+
 const dataCode = `
 var Se={board:\`#F6F8F6\`,line:\`#A9BDB1\`,ink:\`#16202A\`,green:\`#1F7A52\`,greenLight:\`#3FA374\`,greenDark:\`#17603F\`,yellow:\`#FFE14A\`,passGold:\`#D4A017\`,coneOrange:\`#E86C20\`,coneYellow:\`#F3C11B\`,coneRed:\`#DC3838\`,queueBorder:\`#A4B8AB\`},
 Ce=[{id:\`bronze\`,name:\`Bronze\`,grad:[\`#EDB27D\`,\`#9C5B2B\`],ink:\`#7A4520\`},{id:\`silver\`,name:\`Silver\`,grad:[\`#F4F6F8\`,\`#99A2AB\`],ink:\`#59636C\`},{id:\`gold\`,name:\`Gold\`,grad:[\`#FFE793\`,\`#C9961B\`],ink:\`#8A6408\`}],
 we=${JSON.stringify({
-  handling: attackCompiled.standards.handling,
+  handling: primaryAttack.standards ? primaryAttack.standards.handling : {},
   tackle: {
     name: 'Tackle Standards',
     drill: 'Tackle ladder: knees -> walking -> full pace with pads, then live match simulation.',
@@ -64,26 +85,25 @@ we=${JSON.stringify({
     }
   }
 })},
-Te=${JSON.stringify(attackCompiled.tiers.bronze)},
-TeSilver=${JSON.stringify(attackCompiled.tiers.silver)},
-Ee=${JSON.stringify(defenseCompiled)},
-Ye=${JSON.stringify(attackCompiled.tiers)};
+Te=${JSON.stringify(primaryAttack.tiers ? primaryAttack.tiers.bronze : primaryAttack)},
+TeSilver=${JSON.stringify(primaryAttack.tiers ? primaryAttack.tiers.silver : primaryAttack)},
+Ee=${JSON.stringify(primaryDefense)},
+Ye=${JSON.stringify(primaryAttack.tiers || {})},
+drillsCatalog=${JSON.stringify(drillsCatalog)};
 `;
 
-// 3. Load Components
+// 3. Load Generic Components
 const componentsDir = path.resolve(__dirname, 'src/components');
 const medalCode = fs.readFileSync(path.join(componentsDir, 'MedalBadge.js'), 'utf8');
 const pitchCode = fs.readFileSync(path.join(componentsDir, 'PitchBoard.js'), 'utf8');
-const throughCode = fs.readFileSync(path.join(componentsDir, 'ThroughTheHands.js'), 'utf8');
-const defenseCode = fs.readFileSync(path.join(componentsDir, 'DefenseDrill.js'), 'utf8');
+const drillViewCode = fs.readFileSync(path.join(componentsDir, 'DrillView.js'), 'utf8');
 const appCode = fs.readFileSync(path.join(componentsDir, 'App.js'), 'utf8');
 
 const combinedAppCode = [
   dataCode,
   medalCode,
   pitchCode,
-  throughCode,
-  defenseCode,
+  drillViewCode,
   appCode
 ].join('\n');
 
@@ -117,7 +137,7 @@ const outputPath = path.resolve(__dirname, 'warriors-coaching-drills.html');
 fs.writeFileSync(outputPath, finalHtml, 'utf8');
 console.log(`[PASS] Emitted standalone output: ${path.basename(outputPath)} (${(finalHtml.length / 1024).toFixed(1)} KB)`);
 
-// Also mirror to dist/warriors.html if dist exists or create it
+// Also mirror to dist/warriors.html
 const distDir = path.resolve(__dirname, 'dist');
 fs.mkdirSync(distDir, { recursive: true });
 fs.writeFileSync(path.join(distDir, 'warriors.html'), finalHtml, 'utf8');

@@ -48,6 +48,7 @@ tiers:
     queue_depth: 6
     flow:
       - step: 1
+        title: "Step 1: 1st Left Runner Sets Off"
         action: start
         carrier: L1
         call: { who: M1, text: "Right" }
@@ -55,6 +56,7 @@ tiers:
         desc: "Ball starts on the LEFT. 1st Left runner sets off taking a few paces forward in two hands. 1st Middle runner calls \"Right\" and delays slightly to keep attacking depth. Queue boys hold the line."
 
       - step: 2
+        title: "Step 2: 1st Pass — Left → 1st Middle Runner"
         action: pass
         from: L1
         to: M1
@@ -63,6 +65,7 @@ tiers:
         desc: "1st Left runner passes across the chest to 1st Middle runner attacking in stride. 1st Right runner calls \"Right\" and launches from depth. 1st Left runner continues running straight forward toward the top line."
 
       - step: 3
+        title: "Step 3: 2nd Pass — 1st Middle → 1st Right Runner"
         action: pass
         from: M1
         to: R1
@@ -71,6 +74,7 @@ tiers:
         desc: "1st Middle runner commits the imaginary defender and passes wide to 1st Right runner. 2nd Middle runner calls \"Left\" as he times his run from depth. 1st Left runner crosses the top line and begins fading away."
 
       - step: 4
+        title: "Step 4: 3rd Pass — 1st Right → 2nd Middle Runner (Hook)"
         action: hook
         from: R1
         to: M2
@@ -79,6 +83,7 @@ tiers:
         desc: "1st Right runner reaches the top line and hooks a pass diagonally backwards to a fresh 2nd Middle runner in stride! 2nd Left runner calls \"Left\" as he prepares to attack from depth. 1st Left runner fades out straight ahead."
 
       - step: 5
+        title: "Step 5: 4th Pass — 2nd Middle → 2nd Left Runner"
         action: pass
         from: M2
         to: L2
@@ -87,6 +92,7 @@ tiers:
         desc: "2nd Middle runner transfers backwards to 2nd Left runner hitting the pass in stride! 3rd Middle runner calls \"Right\" as he advances with depth. 1st Middle and 1st Right runners run straight through the top line and fade away."
 
       - step: 6
+        title: "Step 6: 5th Pass — 2nd Left → 3rd Middle Runner"
         action: pass
         from: L2
         to: M3
@@ -95,6 +101,7 @@ tiers:
         desc: "2nd Left runner passes across to a fresh 3rd Middle runner taking the ball in stride! When returning to the middle for the 3rd time, a fresh 3rd middle player takes the ball. 2nd Right runner calls \"Right\" from depth."
 
       - step: 7
+        title: "Step 7: 6th Pass — 3rd Middle → 2nd Right Runner"
         action: pass
         from: M3
         to: R2
@@ -103,6 +110,7 @@ tiers:
         desc: "3rd Middle runner draws contact and passes wide to 2nd Right runner bursting from depth! 4th Middle runner calls \"Left\" as he times his approach. 2nd Left runner reaches the top cone."
 
       - step: 8
+        title: "Step 8: 7th Pass — 2nd Right → 4th Middle Runner (Continuous Loop)"
         action: hook
         from: R2
         to: M4
@@ -147,6 +155,7 @@ tiers:
     queue_depth: 6
     flow:
       - step: 1
+        title: "Step 1: 1st Left Runner Sets Off"
         action: start
         carrier: L1
         call: { who: ML1, text: "Right" }
@@ -154,6 +163,7 @@ tiers:
         desc: "Ball starts on the LEFT. 1st Left runner sets off taking a few paces forward in two hands. 1st Mid-Left runner calls \"Right\" and delays slightly to keep attacking depth. Queue boys hold the line."
 
       - step: 2
+        title: "Step 2: 1st Pass — Left → 1st Mid-Left Runner"
         action: pass
         from: L1
         to: ML1
@@ -162,6 +172,7 @@ tiers:
         desc: "1st Left runner passes across the chest to 1st Mid-Left runner attacking in stride. 1st Mid-Right runner calls \"Right\" and launches from depth. 1st Left runner continues running straight forward toward the top line."
 
       - step: 3
+        title: "Step 3: 2nd Pass — 1st Mid-Left → 1st Mid-Right Runner"
         action: pass
         from: ML1
         to: MR1
@@ -170,6 +181,7 @@ tiers:
         desc: "1st Mid-Left runner transfers across the chest to 1st Mid-Right runner attacking in stride. 1st Right runner calls \"Right\" and accelerates from depth into space. 1st Left runner nears the finish line."
 
       - step: 4
+        title: "Step 4: 3rd Pass — 1st Mid-Right → 1st Right Runner"
         action: pass
         from: MR1
         to: R1
@@ -178,6 +190,7 @@ tiers:
         desc: "1st Mid-Right runner passes wide to 1st Right runner hitting top speed on the right wing! 2nd Mid-Right runner calls \"Left\" as he launches from depth to receive the return hook. 1st Left runner crosses the top line."
 
       - step: 5
+        title: "Step 5: 4th Pass — 1st Right → 2nd Mid-Right Runner (Hook)"
         action: hook
         from: R1
         to: MR2
@@ -186,6 +199,7 @@ tiers:
         desc: "1st Right runner reaches the top cone and hooks a pass diagonally backwards to fresh 2nd Mid-Right runner in stride! 2nd Mid-Left calls \"Left\" as he prepares to attack from depth. 1st Left runner fades out."
 
       - step: 6
+        title: "Step 6: 5th Pass — 2nd Mid-Right → 2nd Mid-Left Runner"
         action: pass
         from: MR2
         to: ML2
@@ -194,6 +208,7 @@ tiers:
         desc: "2nd Mid-Right runner transfers backwards to 2nd Mid-Left runner hitting the pass in stride! 2nd Left runner calls \"Left\" as he attacks from depth on the wing. 1st wave runners run straight through the top line and fade away."
 
       - step: 7
+        title: "Step 7: 6th Pass — 2nd Mid-Left → 2nd Left Runner"
         action: pass
         from: ML2
         to: L2
@@ -202,6 +217,7 @@ tiers:
         desc: "2nd Mid-Left runner passes wide to 2nd Left runner bursting into space! The ball has returned all the way across to the Left lane. 3rd Mid-Left runner calls \"Right\" from depth as fresh players file into the queues."
 
       - step: 8
+        title: "Step 8: 7th Pass — 2nd Left → 3rd Mid-Left Runner (Continuous Loop)"
         action: hook
         from: L2
         to: ML3
@@ -243,6 +259,7 @@ tiers:
     queue_depth: 6
     flow:
       - step: 1
+        title: "Step 1: 1st Left Runner Sets Off (Match Tempo)"
         action: start
         carrier: L1
         call: { who: M1, text: "Right" }
@@ -250,6 +267,7 @@ tiers:
         desc: "Ball starts on the LEFT. 1st Left sets off at match pace, fixing defender before transfer."
 
       - step: 2
+        title: "Step 2: 1st Pass — Left → 1st Middle Runner (Hard Spin)"
         action: pass
         from: L1
         to: M1
@@ -258,6 +276,7 @@ tiers:
         desc: "1st Left runner delivers hard flat spin pass to 1st Middle. 1st Right explodes from depth."
 
       - step: 3
+        title: "Step 3: 2nd Pass — 1st Middle → 1st Right Runner (Draw & Transfer)"
         action: pass
         from: M1
         to: R1
@@ -266,6 +285,7 @@ tiers:
         desc: "1st Middle commits the defense hard, releasing 1st Right in full stride."
 
       - step: 4
+        title: "Step 4: 3rd Pass — 1st Right → 2nd Middle Runner (Deep Hook)"
         action: hook
         from: R1
         to: M2
@@ -274,6 +294,7 @@ tiers:
         desc: "1st Right hits the cone and hooks an inside ball to 2nd Middle attacking at maximum velocity."
 
       - step: 5
+        title: "Step 5: 4th Pass — 2nd Middle → 2nd Left Runner (Square Hips)"
         action: pass
         from: M2
         to: L2
@@ -282,6 +303,7 @@ tiers:
         desc: "2nd Middle transfers backwards to 2nd Left attacking from deep launch position."
 
       - step: 6
+        title: "Step 6: 5th Pass — 2nd Left → 3rd Middle Runner (Single Touch)"
         action: pass
         from: L2
         to: M3
@@ -290,6 +312,7 @@ tiers:
         desc: "2nd Left fires pass to fresh 3rd Middle hitting the channel at full sprint."
 
       - step: 7
+        title: "Step 7: 6th Pass — 3rd Middle → 2nd Right Runner (Pace Out Wide)"
         action: pass
         from: M3
         to: R2
@@ -298,6 +321,7 @@ tiers:
         desc: "3rd Middle fixes and releases 2nd Right bursting down the sideline."
 
       - step: 8
+        title: "Step 8: 7th Pass — 2nd Right → 4th Middle Runner (Continuous Wave)"
         action: hook
         from: R2
         to: M4
