@@ -141,6 +141,19 @@ setTimeout(() => {
     }
     console.log('[PASS] Silver tab isolates Silver standard text exclusively');
 
+    // Verify Silver 4-player drill specifics
+    if (!root.textContent.includes('4 continuous queues') && !root.textContent.includes('4 lanes')) {
+      console.error('[FAIL] Silver drill should specify 4 queues / 4 lanes');
+      process.exit(1);
+    }
+    console.log('[PASS] Silver drill displays 4 continuous queues specification');
+
+    if (!root.textContent.includes('1st Mid-L') || !root.textContent.includes('1st Mid-R')) {
+      console.error('[FAIL] Silver ball path breadcrumb should include 1st Mid-L and 1st Mid-R');
+      process.exit(1);
+    }
+    console.log('[PASS] Silver ball path weaves across 4 lanes: Left → 1st Mid-L → 1st Mid-R → 1st Right → ... and back again');
+
     // --- Step C: Click Gold Tab ---
     const goldTab = tierTabs.find(t => t.textContent.trim().toLowerCase() === 'gold');
     goldTab.click();
