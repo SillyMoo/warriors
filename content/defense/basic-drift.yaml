@@ -1,0 +1,160 @@
+id: basic-drift
+name: "Basic Drift & Fold"
+category: defense
+subtitle: "3-man pad hit, shuffle up, diagonal fold, and connected 6-man line speed."
+grid_description: "20m wide x 15m contact grid (3 pads, 3 rows behind start line)"
+recommended_players: "9 to 15 lads in 3 rows + 3 pad holders"
+equipment:
+  - "3 Tackle Pads / Shields"
+  - "9 Cones (3 pads, 3 start, 3 fold)"
+  - "1 Whistle"
+view: [4, 4, 84, 56]
+lines:
+  - { y: 18, label: "PAD LINE (CONTACT ZONE)", kind: gain, end: true }
+  - { y: 42, label: "DEFENSIVE START LINE", kind: solid }
+cones:
+  - { x: 16, y: 18, color: orange, label: "Pad 1" }
+  - { x: 28, y: 18, color: yellow, label: "Pad 2" }
+  - { x: 40, y: 18, color: orange, label: "Pad 3" }
+  - { x: 16, y: 42, color: orange, label: "Start 1" }
+  - { x: 28, y: 42, color: yellow, label: "Start 2" }
+  - { x: 40, y: 42, color: orange, label: "Start 3" }
+  - { x: 52, y: 42, color: yellow, label: "Fold 1" }
+  - { x: 64, y: 42, color: yellow, label: "Fold 2" }
+  - { x: 76, y: 42, color: orange, label: "Fold 3" }
+players:
+  - { id: pad1, team: o, label: "Pad Holder Left" }
+  - { id: pad2, team: o, label: "Pad Holder Middle" }
+  - { id: pad3, team: o, label: "Pad Holder Right" }
+  - { id: s1_1, team: w, label: "1st Set - Left" }
+  - { id: s1_2, team: w, label: "1st Set - Middle" }
+  - { id: s1_3, team: w, label: "1st Set - Right" }
+  - { id: s2_1, team: next, label: "2nd Set - Left" }
+  - { id: s2_2, team: next, label: "2nd Set - Middle" }
+  - { id: s2_3, team: next, label: "2nd Set - Right" }
+  - { id: s3_1, team: queue, label: "3rd Set - Left" }
+  - { id: s3_2, team: queue, label: "3rd Set - Middle" }
+  - { id: s3_3, team: queue, label: "3rd Set - Right" }
+steps:
+  - t: "Setup: 3 Pads Facing 3 Rows on Line"
+    d: "3 lads hold tackle pads 12m ahead. Facing them are defenders in 3 rows on the line. 1st set is on the line, calling 'ready, ready'."
+    ball: ""
+    dur: 950
+    shouts: [{ who: "s1_2", text: "ready, ready" }]
+    focus_tip: "Call 'ready, ready' on the line before moving. Equal 12m spacing across the 3 lads."
+    pos:
+      pad1: [16, 18]
+      pad2: [28, 18]
+      pad3: [40, 18]
+      s1_1: [16, 42]
+      s1_2: [28, 42]
+      s1_3: [40, 42]
+      s2_1: [16, 48]
+      s2_2: [28, 48]
+      s2_3: [40, 48]
+      s3_1: [16, 54]
+      s3_2: [28, 54]
+      s3_3: [40, 54]
+  - t: "1) 1st Set Comes Forward & Hits Pads"
+    d: "First set of 3 lads calls 'ready, ready' and goes forward on call of 'up', hitting the pads together."
+    ball: ""
+    dur: 1100
+    shouts: [{ who: "s1_2", text: "up" }]
+    focus_tip: "Explode forward together on 'up' and drive through the pads."
+    pos:
+      pad1: [16, 18]
+      pad2: [28, 18]
+      pad3: [40, 18]
+      s1_1: [16, 20]
+      s1_2: [28, 20]
+      s1_3: [40, 20]
+      s2_1: [16, 48]
+      s2_2: [28, 48]
+      s2_3: [40, 48]
+      s3_1: [16, 54]
+      s3_2: [28, 54]
+      s3_3: [40, 54]
+  - t: "2) 2nd Set Shuffles Up to the Line"
+    d: "2nd set of 3 lads shuffles up to the line calling 'ready, ready'. 3rd set steps up into Row 2."
+    ball: ""
+    dur: 1000
+    shouts: [{ who: "s2_2", text: "ready, ready" }]
+    focus_tip: "Feet set on the line calling 'ready, ready', maintaining equal 12m spacing."
+    pos:
+      pad1: [16, 18]
+      pad2: [28, 18]
+      pad3: [40, 18]
+      s1_1: [16, 19]
+      s1_2: [28, 19]
+      s1_3: [40, 19]
+      s2_1: [16, 42]
+      s2_2: [28, 42]
+      s2_3: [40, 42]
+      s3_1: [16, 48]
+      s3_2: [28, 48]
+      s3_3: [40, 48]
+  - t: "3) 1st Set Folds Diagonally Back Beside 2nd Set"
+    d: "After hitting, first set of lads comes diagonally backwards beside 2nd set on the line, calling 'fold'. Their spacing remains the same — they do not close up tight."
+    ball: ""
+    dur: 1200
+    shouts: [{ who: "s1_2", text: "fold" }]
+    focus_tip: "Maintain exact 12m spacing when running diagonally back beside the 2nd set on the line. Do not bunch together!"
+    pos:
+      pad1: [16, 18]
+      pad2: [28, 18]
+      pad3: [40, 18]
+      s2_1: [16, 42]
+      s2_2: [28, 42]
+      s2_3: [40, 42]
+      s1_1: [52, 42]
+      s1_2: [64, 42]
+      s1_3: [76, 42]
+      s3_1: [16, 48]
+      s3_2: [28, 48]
+      s3_3: [40, 48]
+  - t: "4) 2nd & 1st Set Come Up Together (2nd Set Hits Pads)"
+    d: "2nd and 1st set of lads come together on the call of 'up' as a 6-man defensive line. 2nd set hits the pads while 1st set holds connection."
+    ball: ""
+    dur: 1150
+    shouts: [{ who: "s2_2", text: "up" }]
+    focus_tip: "Leave the line together on 'up' as a connected flat wall with equal spacing across all 6 lads."
+    pos:
+      pad1: [16, 18]
+      pad2: [28, 18]
+      pad3: [40, 18]
+      s2_1: [16, 20]
+      s2_2: [28, 20]
+      s2_3: [40, 20]
+      s1_1: [52, 22]
+      s1_2: [64, 22]
+      s1_3: [76, 22]
+      s3_1: [16, 44]
+      s3_2: [28, 44]
+      s3_3: [40, 44]
+  - t: "5) 1st Set Queues Back; 3rd Set Up; 2nd Set Folds Beside 3rd"
+    d: "1st set of lads moves to back of queue. 3rd set shuffles up to the line, and 2nd set moves diagonally back beside 3rd set calling 'fold', keeping equal spacing."
+    ball: ""
+    dur: 1200
+    shouts: [{ who: "s2_2", text: "fold" }]
+    focus_tip: "2nd set keeps wide 12m spacing while folding beside the 3rd set."
+    pos:
+      pad1: [16, 18]
+      pad2: [28, 18]
+      pad3: [40, 18]
+      s3_1: [16, 42]
+      s3_2: [28, 42]
+      s3_3: [40, 42]
+      s2_1: [52, 42]
+      s2_2: [64, 42]
+      s2_3: [76, 42]
+      s1_1: [16, 54]
+      s1_2: [28, 54]
+      s1_3: [40, 54]
+remember:
+  - "CALL READY READY: On the line before moving"
+  - "UP TOGETHER: Explode together on 'up' as a 6-man wall"
+  - "FOLD WIDE: Keep 12m spacing when folding beside the next set — never close up tight"
+coach_questions:
+  - "Did the lads call 'ready, ready' on the line before moving?"
+  - "Did the line come up flat together without dogslegs?"
+  - "Did folding defenders keep full spacing beside the set on the line?"

@@ -1,38 +1,65 @@
-# Warriors Coaching Drills - Build & Verification Tooling
+# Warriors Coaching Drills - Modular Build Pipeline
 
-This directory contains reusable node scripts for generating, updating, and verifying `warriors-coaching-drills.html`.
+This directory and root tooling manage the **Reading Rugby Football Club - Warriors Coaching Playbook**.
 
-## Deliverable
-- `../warriors-coaching-drills.html`: The primary standalone, self-contained single HTML file containing all drill boards, player animations, controls, and progression tabs.
+## Architecture Overview
 
-## Available Scripts
+The codebase is organized into a modular build pipeline that produces a single, self-contained HTML file:
 
-### 1. `verify.js`
-Runs an automated DOM test suite using AST parsing (`acorn`) and browser simulation (`jsdom`):
-- Verifies zero syntax errors in the embedded module script.
-- Verifies that React mounts cleanly into `#root`.
-- Verifies that the **Bronze**, **Silver**, and **Gold** progression tabs exist and render properly.
-- Verifies that selecting a tab dynamically enlarges the active heading and badge (44px) while shrinking inactive headings and badges (24px).
-- Verifies that each tier displays its respective coaching standards in isolation:
-  - **Bronze**: *Safe Hands & Depth Stagger* (+ cues)
-  - **Silver**: *Single-Touch Flow in Stride* (+ cues)
-  - **Gold**: *Draw, Hook & Continuous Queue Rotation* (+ cues)
-- Verifies the **Silver 4-player drill**:
-  - 4 continuous queues / 4 lanes (`Left`, `Mid-Left`, `Mid-Right`, `Right`).
-  - Ball path weave: `Left → 1st Mid-L → 1st Mid-R → 1st Right → 2nd Mid-R → 2nd Mid-L → 2nd Left → 3rd Mid-L ↺`.
-
-**Usage:**
-```bash
-node scripts/verify.js
+```text
+├── content/
+│   ├── attack/through-the-hands.yaml   # Declarative coach-friendly drill YAML (Bronze, Silver, Gold)
+│   └── defense/basic-drift.yaml        # Defense drift & fold drill YAML
+├── src/
+│   ├── template.html                   # HTML shell with Tailwind CSS, fonts, and root container
+│   ├── compiler.js                     # Pitch compiler translating declarative YAML into coordinates
+│   └── components/
+│       ├── App.js                      # Main playbook header, tabs (Attack/Defense), and footer
+│       ├── ThroughTheHands.js          # Interactive handling drill view with progression tabs
+│       ├── DefenseDrill.js             # Defense drift & fold interactive view
+│       ├── PitchBoard.js               # SVG pitch renderer with runner fadeout and shouts
+│       └── MedalBadge.js               # Medal SVG badge and standards display panel
+├── build.js                            # Compiler and bundler script
+├── package.json                        # Build and test scripts
+├── scripts/
+│   ├── verify.js                       # Acorn AST & JSDOM test suite
+│   └── serve.js                        # Local preview server
+├── warriors-coaching-drills.html       # Primary standalone deliverable
+└── dist/warriors.html                  # Mirrored deliverable
 ```
 
-### 2. `update_silver.js`
-Generates and injects the 4-lane player setup and weave animation for the Silver tier:
-- Configures 4 continuous queues of players (`L1..L6`, `ML1..ML6`, `MR1..MR6`, `R1..R6`).
-- Places 8 cones (4 top cones, 4 queue start cones across 20m grid).
-- Maps the continuous 8-step animation weave from Left across all 4 channels to Right, and back again to Left and into the infinite continuous cycle.
+## Coach-Friendly YAML Syntax
 
-**Usage:**
+Drills are defined without raw coordinates:
+- **Lanes**: Specify `id`, `name`, and cone colors (`top`, `queue`).
+- **Flow**: Define steps by rugby actions (`start`, `pass`, `hook`):
+  ```yaml
+  - step: 2
+    action: pass
+    from: L1
+    to: ML1
+    call: { who: MR1, text: "Right" }
+    desc: "1st Left runner passes across chest to 1st Mid-Left attacking in stride."
+  ```
+The compiler calculates channel corridors, cone coordinates, runner acceleration from depth, and runner fadeout when crossing the top line.
+
+## Commands
+
+### 1. Build
+Compiles all YAML drills and components into `./warriors-coaching-drills.html` (and mirrors to `dist/warriors.html`):
 ```bash
-node scripts/update_silver.js
+npm run build
+```
+
+### 2. Test & Verification
+Runs the automated verification suite using AST parsing and JSDOM:
+```bash
+npm test
+```
+
+### 3. Local Preview Server
+Serves the playbook on port 8080:
+```bash
+npm run serve
+# Available at http://localhost:8080/warriors-coaching-drills.html
 ```

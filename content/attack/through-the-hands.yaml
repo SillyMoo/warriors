@@ -1,0 +1,314 @@
+id: through-the-hands
+name: "Through the Hands"
+category: attack
+summary: "Continuous infinite handling loop across channels with depth stagger and single-touch flow."
+
+standards:
+  bronze:
+    title: "Safe Hands & Depth Stagger"
+    cues:
+      - "Depth Rule: No player leaves the line until the runner before them takes a few paces"
+      - "Two hands on the ball above waist height, fingers spread in an inviting W"
+      - "Run straight at the cones - hips square to the end line, do not crab sideways"
+  silver:
+    title: "Single-Touch Flow in Stride"
+    cues:
+      - "Each boy touches the ball once, runs all the way through, and loops around outside cones"
+      - "4-lane weave: Left → Mid-Left → Mid-Right → Right and back again into fresh depth runners"
+      - "Catch and pass in one continuous fluid motion without breaking stride"
+  gold:
+    title: "Draw, Hook & Continuous Queue Rotation"
+    cues:
+      - "Middle runner commits the imaginary defender before transferring"
+      - "Wide runner hits the top cone and hooks an inside pass to the incoming middle runner"
+      - "High aerobic work-rate: sprint the outside perimeter cones to cycle into the queues"
+
+tiers:
+  # ============================================================
+  # BRONZE TIER (3 LANES)
+  # ============================================================
+  bronze:
+    name: "Bronze"
+    subtitle: "Continuous infinite handling loop: Left → Middle → Right → Middle → Left → Middle → Right."
+    grid_description: "15m wide x 20m long grid (5m spacing between 3 lanes)"
+    recommended_players: "9 to 15 players in 3 continuous queues"
+    equipment:
+      - "6 Cones (3 start cones, 3 top cones)"
+      - "2 Rugby Balls in flow"
+    lanes:
+      - id: L
+        name: "Left"
+        cones: { top: orange, queue: orange }
+      - id: M
+        name: "Middle"
+        cones: { top: yellow, queue: yellow }
+      - id: R
+        name: "Right"
+        cones: { top: orange, queue: orange }
+    queue_depth: 6
+    flow:
+      - step: 1
+        action: start
+        carrier: L1
+        call: { who: M1, text: "Right" }
+        tip: "Only two calls: 'Right' when you want the ball to come right to you, and 'Left' when you want it to come left."
+        desc: "Ball starts on the LEFT. 1st Left runner sets off taking a few paces forward in two hands. 1st Middle runner calls \"Right\" and delays slightly to keep attacking depth. Queue boys hold the line."
+
+      - step: 2
+        action: pass
+        from: L1
+        to: M1
+        call: { who: R1, text: "Right" }
+        tip: "1st Middle catches at speed. 1st Right demands the pass with early call \"Right\"."
+        desc: "1st Left runner passes across the chest to 1st Middle runner attacking in stride. 1st Right runner calls \"Right\" and launches from depth. 1st Left runner continues running straight forward toward the top line."
+
+      - step: 3
+        action: pass
+        from: M1
+        to: R1
+        call: { who: M2, text: "Left" }
+        tip: "Runners run straight through the top line and fade away. Fresh players queue up below."
+        desc: "1st Middle runner commits the imaginary defender and passes wide to 1st Right runner. 2nd Middle runner calls \"Left\" as he times his run from depth. 1st Left runner crosses the top line and begins fading away."
+
+      - step: 4
+        action: hook
+        from: R1
+        to: M2
+        call: { who: L2, text: "Left" }
+        tip: "The ball never goes back to a player who already had it. 2nd Middle is a fresh runner!"
+        desc: "1st Right runner reaches the top line and hooks a pass diagonally backwards to a fresh 2nd Middle runner in stride! 2nd Left runner calls \"Left\" as he prepares to attack from depth. 1st Left runner fades out straight ahead."
+
+      - step: 5
+        action: pass
+        from: M2
+        to: L2
+        call: { who: M3, text: "Right" }
+        tip: "1st wave runners run straight through the top line and fade out; new boys file in at the bottom."
+        desc: "2nd Middle runner transfers backwards to 2nd Left runner hitting the pass in stride! 3rd Middle runner calls \"Right\" as he advances with depth. 1st Middle and 1st Right runners run straight through the top line and fade away."
+
+      - step: 6
+        action: pass
+        from: L2
+        to: M3
+        call: { who: R2, text: "Right" }
+        tip: "3rd time in middle = 3rd fresh middle player! Single touch per boy."
+        desc: "2nd Left runner passes across to a fresh 3rd Middle runner taking the ball in stride! When returning to the middle for the 3rd time, a fresh 3rd middle player takes the ball. 2nd Right runner calls \"Right\" from depth."
+
+      - step: 7
+        action: pass
+        from: M3
+        to: R2
+        call: { who: M4, text: "Left" }
+        tip: "2nd Right runner catches at top speed. Receivers call \"Left\" or \"Right\" to demand the pass."
+        desc: "3rd Middle runner draws contact and passes wide to 2nd Right runner bursting from depth! 4th Middle runner calls \"Left\" as he times his approach. 2nd Left runner reaches the top cone."
+
+      - step: 8
+        action: hook
+        from: R2
+        to: M4
+        call: { who: L3, text: "Left" }
+        tip: "The sequence repeats infinitely: Left → Middle → Right → Middle → Left → Middle → Right to infinity!"
+        desc: "2nd Right runner reaches the top line and hooks the pass to 4th Middle runner in stride! 3rd Left runner calls \"Left\" as fresh players continuously file in at the bottom. 2nd Left and 3rd Middle run straight through the top line and fade away."
+    remember:
+      - "TWO CALLS ONLY: \"Left\" (when you want ball passed left to you) and \"Right\" (when you want ball passed right to you)"
+      - "RUN STRAIGHT THROUGH: Run straight through the top line and stay in your lane corridor — never crab sideways"
+      - "DEPTH RULE: No player leaves the line until the runner before them has taken a few paces"
+      - "WHEN RETURNING TO MIDDLE: A fresh middle runner always takes the ball (never the previous runner!)"
+      - "CONTINUOUS RECYCLE: In training, players loop around outside to re-queue; on the board they fade away as an infinite line reappears at the bottom"
+    coach_questions:
+      - "Did the receiver call \"Left\" or \"Right\" loudly and early before the pass was released?"
+      - "Did every boy run straight through the top line and keep square hips in his lane corridor?"
+      - "When the ball returned to the middle the 3rd time, was it received by a 3rd fresh middle runner?"
+
+  # ============================================================
+  # SILVER TIER (4 LANES)
+  # ============================================================
+  silver:
+    name: "Silver"
+    subtitle: "Continuous 4-lane handling weave: Left → Mid-Left → Mid-Right → Right and back again."
+    grid_description: "20m wide x 20m long grid (5m spacing across 4 lanes)"
+    recommended_players: "12 to 20 players in 4 continuous queues"
+    equipment:
+      - "8 Cones (4 start cones, 4 top cones)"
+      - "2 Rugby Balls in flow"
+    lanes:
+      - id: L
+        name: "Left"
+        cones: { top: orange, queue: orange }
+      - id: ML
+        name: "Mid-Left"
+        cones: { top: yellow, queue: yellow }
+      - id: MR
+        name: "Mid-Right"
+        cones: { top: yellow, queue: yellow }
+      - id: R
+        name: "Right"
+        cones: { top: orange, queue: orange }
+    queue_depth: 6
+    flow:
+      - step: 1
+        action: start
+        carrier: L1
+        call: { who: ML1, text: "Right" }
+        tip: "Only two calls: \"Right\" when you want the ball to come right to you, and \"Left\" when you want it to come left."
+        desc: "Ball starts on the LEFT. 1st Left runner sets off taking a few paces forward in two hands. 1st Mid-Left runner calls \"Right\" and delays slightly to keep attacking depth. Queue boys hold the line."
+
+      - step: 2
+        action: pass
+        from: L1
+        to: ML1
+        call: { who: MR1, text: "Right" }
+        tip: "1st Mid-Left catches at speed. 1st Mid-Right demands the pass with early call \"Right\"."
+        desc: "1st Left runner passes across the chest to 1st Mid-Left runner attacking in stride. 1st Mid-Right runner calls \"Right\" and launches from depth. 1st Left runner continues running straight forward toward the top line."
+
+      - step: 3
+        action: pass
+        from: ML1
+        to: MR1
+        call: { who: R1, text: "Right" }
+        tip: "Pass across the chest in one fluid motion without breaking stride. Keep hips square."
+        desc: "1st Mid-Left runner transfers across the chest to 1st Mid-Right runner attacking in stride. 1st Right runner calls \"Right\" and accelerates from depth into space. 1st Left runner nears the finish line."
+
+      - step: 4
+        action: pass
+        from: MR1
+        to: R1
+        call: { who: MR2, text: "Left" }
+        tip: "1st Right runner catches at top speed. 2nd Mid-Right demands the inside hook with \"Left\"."
+        desc: "1st Mid-Right runner passes wide to 1st Right runner hitting top speed on the right wing! 2nd Mid-Right runner calls \"Left\" as he launches from depth to receive the return hook. 1st Left runner crosses the top line."
+
+      - step: 5
+        action: hook
+        from: R1
+        to: MR2
+        call: { who: ML2, text: "Left" }
+        tip: "The ball never goes back to a player who already had it. 2nd Mid-Right is a fresh runner!"
+        desc: "1st Right runner reaches the top cone and hooks a pass diagonally backwards to fresh 2nd Mid-Right runner in stride! 2nd Mid-Left calls \"Left\" as he prepares to attack from depth. 1st Left runner fades out."
+
+      - step: 6
+        action: pass
+        from: MR2
+        to: ML2
+        call: { who: L2, text: "Left" }
+        tip: "2nd Mid-Left catches in stride and transfers to 2nd Left. Single touch per boy."
+        desc: "2nd Mid-Right runner transfers backwards to 2nd Mid-Left runner hitting the pass in stride! 2nd Left runner calls \"Left\" as he attacks from depth on the wing. 1st wave runners run straight through the top line and fade away."
+
+      - step: 7
+        action: pass
+        from: ML2
+        to: L2
+        call: { who: ML3, text: "Right" }
+        tip: "Ball has traveled Left → Mid-Left → Mid-Right → Right and back again to Left!"
+        desc: "2nd Mid-Left runner passes wide to 2nd Left runner bursting into space! The ball has returned all the way across to the Left lane. 3rd Mid-Left runner calls \"Right\" from depth as fresh players file into the queues."
+
+      - step: 8
+        action: hook
+        from: L2
+        to: ML3
+        call: { who: MR3, text: "Right" }
+        tip: "The sequence repeats infinitely: Left → Mid-Left → Mid-Right → Right and back again!"
+        desc: "2nd Left runner reaches the top cone and hooks the pass to 3rd Mid-Left runner in stride! 3rd Mid-Right calls \"Right\" as the wave weaves back across to the right in an infinite continuous cycle."
+    remember:
+      - "4 LANES IN HARMONY: Left → Mid-Left → Mid-Right → Right and back again across 4 continuous queues"
+      - "TWO CALLS ONLY: \"Left\" (demanding pass left to you) and \"Right\" (demanding pass right to you)"
+      - "RUN STRAIGHT THROUGH: Run straight through your channel cones — hips square to end line, do not drift or crab sideways"
+      - "DEPTH STAGGER: No boy leaves the mark until the carrier ahead has taken paces into space"
+      - "SINGLE-TOUCH FLOW: Catch and transfer across the body in one fluid stride without slowing down"
+    coach_questions:
+      - "Did the 4 runners maintain square hips in their respective lanes across the full 20m grid width?"
+      - "Did the wing hook the pass cleanly to a fresh incoming depth runner at the turn?"
+      - "Were passes caught out in front of the chest in stride without any bobbles or backwards checks?"
+
+  # ============================================================
+  # GOLD TIER (3 LANES - ADVANCED DRAW & HOOK)
+  # ============================================================
+  gold:
+    name: "Gold"
+    subtitle: "Continuous infinite handling loop with high aerobic pace, defender commitment, and deep hook angles."
+    grid_description: "15m wide x 20m long grid (5m spacing between 3 lanes)"
+    recommended_players: "9 to 15 players in 3 continuous queues"
+    equipment:
+      - "6 Cones (3 start cones, 3 top cones)"
+      - "2 Rugby Balls in flow"
+    lanes:
+      - id: L
+        name: "Left"
+        cones: { top: orange, queue: orange }
+      - id: M
+        name: "Middle"
+        cones: { top: yellow, queue: yellow }
+      - id: R
+        name: "Right"
+        cones: { top: orange, queue: orange }
+    queue_depth: 6
+    flow:
+      - step: 1
+        action: start
+        carrier: L1
+        call: { who: M1, text: "Right" }
+        tip: "Gold tempo: sprint into the carry at match pace."
+        desc: "Ball starts on the LEFT. 1st Left sets off at match pace, fixing defender before transfer."
+
+      - step: 2
+        action: pass
+        from: L1
+        to: M1
+        call: { who: R1, text: "Right" }
+        tip: "Catch and release in 0.5s flat."
+        desc: "1st Left runner delivers hard flat spin pass to 1st Middle. 1st Right explodes from depth."
+
+      - step: 3
+        action: pass
+        from: M1
+        to: R1
+        call: { who: M2, text: "Left" }
+        tip: "Draw and fix defender before releasing the wing."
+        desc: "1st Middle commits the defense hard, releasing 1st Right in full stride."
+
+      - step: 4
+        action: hook
+        from: R1
+        to: M2
+        call: { who: L2, text: "Left" }
+        tip: "Aggressive inside hook angle right on the cone line."
+        desc: "1st Right hits the cone and hooks an inside ball to 2nd Middle attacking at maximum velocity."
+
+      - step: 5
+        action: pass
+        from: M2
+        to: L2
+        call: { who: M3, text: "Right" }
+        tip: "Keep hips square; pass off left hand with speed."
+        desc: "2nd Middle transfers backwards to 2nd Left attacking from deep launch position."
+
+      - step: 6
+        action: pass
+        from: L2
+        to: M3
+        call: { who: R2, text: "Right" }
+        tip: "Single touch per boy, high-aerobic transition."
+        desc: "2nd Left fires pass to fresh 3rd Middle hitting the channel at full sprint."
+
+      - step: 7
+        action: pass
+        from: M3
+        to: R2
+        call: { who: M4, text: "Left" }
+        tip: "Demand the pass early with commanding voice."
+        desc: "3rd Middle fixes and releases 2nd Right bursting down the sideline."
+
+      - step: 8
+        action: hook
+        from: R2
+        to: M4
+        call: { who: L3, text: "Left" }
+        tip: "Continuous perimeter sprint back to queue line."
+        desc: "2nd Right reaches top cone, hooks to 4th Middle to sustain the endless handling loop!"
+    remember:
+      - "MATCH TEMPO: Catch and release under pressure within 0.5s"
+      - "FIX DEFENDER: Never drift; run straight to freeze the imaginary opposition"
+      - "AEROBIC WORK-RATE: Sprint the perimeter back to the queue mark"
+    coach_questions:
+      - "Are hands up early in an inviting target prior to ball arrival?"
+      - "Are runners holding depth so they hit the pass at top speed?"
+      - "Is the hook pass executed cleanly behind without checking stride?"
