@@ -113,10 +113,11 @@ const outputPath = path.resolve(__dirname, 'warriors-coaching-drills.html');
 fs.writeFileSync(outputPath, finalHtml, 'utf8');
 console.log(`[PASS] Emitted standalone output: ${path.basename(outputPath)} (${(finalHtml.length / 1024).toFixed(1)} KB)`);
 
-// Also mirror to dist/warriors.html
+// Also mirror to dist/warriors.html and dist/index.html (for GitHub Pages root)
 const distDir = path.resolve(__dirname, 'dist');
 fs.mkdirSync(distDir, { recursive: true });
 fs.writeFileSync(path.join(distDir, 'warriors.html'), finalHtml, 'utf8');
-console.log(`[PASS] Mirrored build to dist/warriors.html`);
+fs.writeFileSync(path.join(distDir, 'index.html'), finalHtml, 'utf8');
+console.log(`[PASS] Mirrored build to dist/warriors.html and dist/index.html`);
 
 console.log('\n=== BUILD COMPLETED SUCCESSFULLY ===');
